@@ -1,7 +1,20 @@
 import Link from "next/link";
-import { Inter } from "@next/font/google";
+import { Form } from "./Form";
 
-export default function Home() {
+async function getPosts() {
+  const res = await fetch(`${process.env.BASE_URL}/api/getPosts`);
+
+  if (!res.ok) {
+    throw new Error("failed to load");
+  }
+
+  return res.json();
+}
+
+export default async function Home() {
+  const data: { id: number; title: string }[] = await getPosts();
+  console.log("🚀 ~ file: page.tsx:14 ~ Home ~ data:", data);
+
   return (
     <main className="py-8 px-48">
       <Link
@@ -10,6 +23,12 @@ export default function Home() {
       >
         Go to the dashboard
       </Link>
+      <Form />
+      <div className="py-6">
+        {data.map((post) => (
+          <h1 key={post.id}>{post.title}</h1>
+        ))}
+      </div>
     </main>
   );
 }
