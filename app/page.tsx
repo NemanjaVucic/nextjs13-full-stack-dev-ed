@@ -2,7 +2,9 @@ import Link from "next/link";
 import { Form } from "./Form";
 
 async function getPosts() {
-  const res = await fetch(`/api/getPosts`);
+  const dev = process.env.Node_ENV !== "production";
+  const { DEV_URL, PROD_URL } = process.env;
+  const res = await fetch(`${dev ? DEV_URL : PROD_URL}/api/getPosts`);
 
   if (!res.ok) {
     throw new Error("failed to load");
